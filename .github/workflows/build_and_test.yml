@@ -1,0 +1,35 @@
+name: Build and test
+
+on:
+  pull_request:
+    paths-ignore:
+      - "docs/**"
+      - "examples/**"
+      - "README.md"
+      - "CHANGELOG.md"
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Out Repo
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24.x"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build TS
+        run: npm run build:ts
+
+      - name: Build
+        run: npm run build
+
+      - name: Test
+        run: npm test
